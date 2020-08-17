@@ -1,5 +1,6 @@
 package com.falabella.HabilitarPuntoDevolucion.controllers;
 
+import com.falabella.HabilitarPuntoDevolucion.model.PuntosDevolucion;
 import com.falabella.HabilitarPuntoDevolucion.model.Rule;
 import com.falabella.HabilitarPuntoDevolucion.services.PuntosDevolucionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RequestMapping("/puntos-devolucion")
 @RestController
@@ -16,9 +18,9 @@ public class PuntosDevolucionController {
     private PuntosDevolucionService puntosDevolucionService;
 
     @CrossOrigin
-    @RequestMapping(method = RequestMethod.POST, value = "/getPuntosDevolucion")
-    public ResponseEntity getPuntosDevolucion(HttpServletRequest httpServletRequest,
-                                              @RequestBody Rule rule) {
+    @RequestMapping(method = RequestMethod.POST, value = "/get-puntos-devolucion")
+    public List<PuntosDevolucion> getPuntosDevolucion(HttpServletRequest httpServletRequest,
+                                                      @RequestBody Rule rule) {
         return puntosDevolucionService.getPuntosDevolucion(httpServletRequest, rule);
     }
 

@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Rule {
+public class BusinessNC {
 
-    private String returnPoint;
-    private ReturnPointRulesEntities returnPointRulesEntities;
+    private OperadorValor hierarchy;
+    private OperadorValor status;
 
 }

@@ -14,7 +14,7 @@ public class OperadorValor {
 
     @JsonProperty("OPER")
     private String oper;
-    @JsonProperty("VALOR")
-    private String valor;
+    @JsonProperty("VALUE")
+    private String value;
 
 }

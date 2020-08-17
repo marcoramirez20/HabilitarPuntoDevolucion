@@ -2,11 +2,12 @@ package com.falabella.HabilitarPuntoDevolucion.services.Impl;
 
 import com.falabella.HabilitarPuntoDevolucion.model.OperadorValor;
 import com.falabella.HabilitarPuntoDevolucion.model.PuntosDevolucion;
-import com.falabella.HabilitarPuntoDevolucion.model.ReturnPointRules;
 import com.falabella.HabilitarPuntoDevolucion.model.Rule;
+import com.falabella.HabilitarPuntoDevolucion.services.ApiReglasService;
 import com.falabella.HabilitarPuntoDevolucion.services.PuntosDevolucionService;
 import com.google.gson.Gson;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,16 +19,19 @@ import java.util.Map;
 @Service
 public class PuntosDevolucionServiceImpl implements PuntosDevolucionService {
 
-    private static final String ruleType = "1";
+    @Autowired
+    private ApiReglasService apiReglasService;
+
+    @Value("${ruleType}")
+    private String ruleType;
 
     @Override
-    public ResponseEntity getPuntosDevolucion(HttpServletRequest httpServletRequest, Rule rule) {
-        //TODO aqui va el llamado al servicio de las reglas
-        List<Rule> lista = llenarLista();
+    public List<PuntosDevolucion> getPuntosDevolucion(HttpServletRequest httpServletRequest, Rule rule) {
+        List<Rule> lista = apiReglasService.getAllRules();
         Map<String, List<Rule>> agrupadas = new HashMap<>();
         List<PuntosDevolucion> puntosDevolucions;
         lista.forEach((x) -> {
-            if(ruleType.equalsIgnoreCase(x.getReturnPointRules().getRuleType())){
+            if(ruleType.equalsIgnoreCase(x.getReturnPointRulesEntities().getRuleType())){
                 if(agrupadas.containsKey(x.getReturnPoint())){
                     agrupadas.get(x.getReturnPoint()).add(x);
                 } else {
@@ -41,43 +45,62 @@ public class PuntosDevolucionServiceImpl implements PuntosDevolucionService {
         agrupadas.forEach((x, y) -> {
             boolean habilitado = false;
             for(Rule z : y){
-                boolean cumpleRegla = cumpleRegla(z.getReturnPointRules().getCustomer(), rule.getReturnPointRules().getCustomer())
-                        && cumpleRegla(z.getReturnPointRules().getMotive(), rule.getReturnPointRules().getMotive())
-                        && cumpleRegla(z.getReturnPointRules().getPrice(), rule.getReturnPointRules().getPrice())
-                        && cumpleRegla(z.getReturnPointRules().getPurchaseDate(), rule.getReturnPointRules().getPurchaseDate())
-                        && cumpleRegla(z.getReturnPointRules().getSize(), rule.getReturnPointRules().getSize())
-                        && cumpleRegla(z.getReturnPointRules().getWithdrawalDate(), rule.getReturnPointRules().getWithdrawalDate())
-                        && cumpleRegla(z.getReturnPointRules().getBusinessLogic().getDeliveryMethod(),
-                        rule.getReturnPointRules().getBusinessLogic().getDeliveryMethod())
-                        && cumpleRegla(z.getReturnPointRules().getBusinessLogic().getPolitics(),
-                        rule.getReturnPointRules().getBusinessLogic().getPolitics())
-                        && cumpleRegla(z.getReturnPointRules().getBusinessLogic().getSalesChannel(),
-                        rule.getReturnPointRules().getBusinessLogic().getSalesChannel())
-                        && cumpleRegla(z.getReturnPointRules().getBusinessLogic().getStorage(),
-                        rule.getReturnPointRules().getBusinessLogic().getStorage());
+                boolean cumpleRegla = cumpleRegla(z.getReturnPointRulesEntities().getCustomer(), rule.getReturnPointRulesEntities().getCustomer())
+                        && cumpleRegla(z.getReturnPointRulesEntities().getMotive(), rule.getReturnPointRulesEntities().getMotive())
+                        && cumpleRegla(z.getReturnPointRulesEntities().getPrice(), rule.getReturnPointRulesEntities().getPrice())
+                        && cumpleRegla(z.getReturnPointRulesEntities().getPurchaseDate(), rule.getReturnPointRulesEntities().getPurchaseDate())
+                        && cumpleRegla(z.getReturnPointRulesEntities().getSize(), rule.getReturnPointRulesEntities().getSize())
+                        && cumpleRegla(z.getReturnPointRulesEntities().getWithdrawalDate(), rule.getReturnPointRulesEntities().getWithdrawalDate())
+
+                        && cumpleRegla(z.getReturnPointRulesEntities().getBusinessLogic().getDeliveryMethod(),
+                        rule.getReturnPointRulesEntities().getBusinessLogic().getDeliveryMethod())
+                        && cumpleRegla(z.getReturnPointRulesEntities().getBusinessLogic().getPolitics(),
+                        rule.getReturnPointRulesEntities().getBusinessLogic().getPolitics())
+                        && cumpleRegla(z.getReturnPointRulesEntities().getBusinessLogic().getSalesChannel(),
+                        rule.getReturnPointRulesEntities().getBusinessLogic().getSalesChannel())
+                        && cumpleRegla(z.getReturnPointRulesEntities().getBusinessLogic().getStorage(),
+                        rule.getReturnPointRulesEntities().getBusinessLogic().getStorage())
+
+                        && cumpleRegla(z.getReturnPointRulesEntities().getBusinessNC().getHierarchy(),
+                        rule.getReturnPointRulesEntities().getBusinessNC().getHierarchy())
+                        && cumpleRegla(z.getReturnPointRulesEntities().getBusinessNC().getStatus(),
+                        rule.getReturnPointRulesEntities().getBusinessNC().getStatus())
+
+                        && cumpleRegla(z.getReturnPointRulesEntities().getBusinessPrice().getCost(),
+                        rule.getReturnPointRulesEntities().getBusinessPrice().getCost())
+                        && cumpleRegla(z.getReturnPointRulesEntities().getBusinessPrice().getMethod(),
+                        rule.getReturnPointRulesEntities().getBusinessPrice().getMethod())
+                        && cumpleRegla(z.getReturnPointRulesEntities().getBusinessPrice().getOutcome(),
+                        rule.getReturnPointRulesEntities().getBusinessPrice().getOutcome())
+                        && cumpleRegla(z.getReturnPointRulesEntities().getBusinessPrice().getProductType(),
+                        rule.getReturnPointRulesEntities().getBusinessPrice().getProductType())
+                        && cumpleRegla(z.getReturnPointRulesEntities().getBusinessPrice().getTimeBand(),
+                        rule.getReturnPointRulesEntities().getBusinessPrice().getTimeBand())
+                        ;
                 habilitado = habilitado || !cumpleRegla;
             }
+            puntosDevolucions.add(new PuntosDevolucion(x, habilitado));
         });
-        return null;
+        return puntosDevolucions;
     }
 
     private boolean cumpleRegla(OperadorValor operadorRegla, OperadorValor operadorAEvaluar){
         if(operadorRegla == null || operadorRegla.getOper() == null || operadorRegla.getOper().trim().isEmpty()
-                || operadorRegla.getValor() == null || operadorRegla.getValor().trim().isEmpty()
+                || operadorRegla.getValue() == null || operadorRegla.getValue().trim().isEmpty()
                 || operadorAEvaluar == null || operadorAEvaluar.getOper() == null
-                || operadorAEvaluar.getOper().trim().isEmpty() || operadorAEvaluar.getValor() == null
-                || operadorAEvaluar.getValor().trim().isEmpty()){
+                || operadorAEvaluar.getOper().trim().isEmpty() || operadorAEvaluar.getValue() == null
+                || operadorAEvaluar.getValue().trim().isEmpty()){
             return true;
         }
         switch(operadorRegla.getOper()){
             case "=":
-                return operadorRegla.getValor().equalsIgnoreCase(operadorAEvaluar.getValor());
+                return operadorRegla.getValue().equalsIgnoreCase(operadorAEvaluar.getValue());
             case "!=":
-                return !operadorRegla.getValor().equalsIgnoreCase(operadorAEvaluar.getValor());
+                return !operadorRegla.getValue().equalsIgnoreCase(operadorAEvaluar.getValue());
             default:
                 try{
-                    Double valorRegla = Double.parseDouble(operadorRegla.getValor());
-                    Double valorAEvaluar = Double.parseDouble(operadorAEvaluar.getValor());
+                    Double valorRegla = Double.parseDouble(operadorRegla.getValue());
+                    Double valorAEvaluar = Double.parseDouble(operadorAEvaluar.getValue());
                     switch(operadorRegla.getOper()){
                         case ">":
                             return valorAEvaluar > valorRegla;
