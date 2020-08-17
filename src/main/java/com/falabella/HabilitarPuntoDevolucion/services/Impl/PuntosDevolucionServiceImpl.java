@@ -87,8 +87,7 @@ public class PuntosDevolucionServiceImpl implements PuntosDevolucionService {
     private boolean cumpleRegla(OperadorValor operadorRegla, OperadorValor operadorAEvaluar){
         if(operadorRegla == null || operadorRegla.getOper() == null || operadorRegla.getOper().trim().isEmpty()
                 || operadorRegla.getValue() == null || operadorRegla.getValue().trim().isEmpty()
-                || operadorAEvaluar == null || operadorAEvaluar.getOper() == null
-                || operadorAEvaluar.getOper().trim().isEmpty() || operadorAEvaluar.getValue() == null
+                || operadorAEvaluar == null || operadorAEvaluar.getValue() == null
                 || operadorAEvaluar.getValue().trim().isEmpty()){
             return true;
         }
