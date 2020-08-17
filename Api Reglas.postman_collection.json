@@ -1,0 +1,62 @@
+{
+	"info": {
+		"_postman_id": "6ec27635-3c6f-49ab-9b95-0484c4de8759",
+		"name": "Api Reglas",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET FindAll",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://34.86.115.170/dl-rules/api/findAll",
+					"protocol": "http",
+					"host": [
+						"34",
+						"86",
+						"115",
+						"170"
+					],
+					"path": [
+						"dl-rules",
+						"api",
+						"findAll"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST getPuntosDevolucion",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/puntos-devolucion/get-puntos-devolucion",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"puntos-devolucion",
+						"get-puntos-devolucion"
+					]
+				},
+				"description": "POST getPuntosDevolucion"
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
